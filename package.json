@@ -4,7 +4,10 @@
   "description": "dataguru nodejs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npm run clean & babel src -d target --watch",
+    "compile": "npm run clean & babel src -d target",
+    "clean": "rm -rf target"
   },
   "repository": {
     "type": "git",
@@ -15,5 +18,14 @@
   "bugs": {
     "url": "https://github.com/ParadeTo/dataguru-nodejs/issues"
   },
-  "homepage": "https://github.com/ParadeTo/dataguru-nodejs#readme"
+  "homepage": "https://github.com/ParadeTo/dataguru-nodejs#readme",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015-node4": "^2.1.0",
+    "babel-preset-stage-0": "^6.16.0"
+  },
+  "dependencies": {
+    "mongoose": "^4.7.0",
+    "project-core": "^0.0.16"
+  }
 }
