@@ -32,6 +32,7 @@
     "mongoose": "^4.7.0",
     "multiparty": "^4.1.2",
     "project-core": "^0.0.16",
-    "serve-static": "^1.11.1"
+    "serve-static": "^1.11.1",
+    "validator": "^6.2.0"
   }
 }

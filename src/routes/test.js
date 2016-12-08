@@ -9,4 +9,4 @@ module.exports = function (done) {
     res.set('Content-Type','text/html;charset=utf-8')
     res.end('hello world, 你好世界')
   })
-}
+};
