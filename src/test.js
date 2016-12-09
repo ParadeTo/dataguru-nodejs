@@ -7,6 +7,16 @@
 // },console.log)
 
 
-$.method('user.update').call({
-  name: 'hello2'
-},console.log)
+// $.method('user.update').call({
+//   name: 'hello2'
+// },console.log)
+
+async function test() {
+  const user = await $.method('user.get').call({
+    name: 'hello2'
+  });
+  console.log(user);
+}
+
+
+test()

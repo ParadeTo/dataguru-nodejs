@@ -47,7 +47,6 @@ module.exports = function (done) {
     } else {
       return callback(new Error('missing parameter _id|name|email'));
     }
-
     $.model.User.findOne(query, callback);
   });
 
