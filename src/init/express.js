@@ -40,7 +40,7 @@ module.exports = function (done) {
       fnList = fnList.map(fn => {
         return function (req, res, next) {
           const ret = fn(req, res, next); // 这里的fn是async function 返回promise对象
-          if (ret.catch) ret.catch(next); // 捕获异常
+          if (ret && ret.catch) ret.catch(next); // 捕获异常
         };
       });
       router[method](path, ...fnList);
