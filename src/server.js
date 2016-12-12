@@ -31,14 +31,19 @@ const debug = $.createDebug('server');
 
 // 加载配置文件
 $.init.add((done) => {
-  $.config.load(path.resolve(__dirname, 'config.js'));
-  const env = process.env.NODE_ENV || null;
-  if (env) {
-    debug('load env: %s', env);
-    $.config.load(path.resolve(__dirname, '../config', env + '.js'));
+  try {
+    $.config.load(path.resolve(__dirname, 'config.js'));
+    const env = process.env.NODE_ENV || null;
+    if (env) {
+      debug('load env: %s', env);
+      $.config.load(path.resolve(__dirname, '../config', env + '.js'));
+    }
+    $.env = env;
+    done();
+  } catch (err) {
+    err.msg = '配置文件格式不正确';
+    done(err);
   }
-  $.env = env;
-  done();
 });
 
 // 初始化mongodb
@@ -63,6 +68,6 @@ $.init((err) => {
     process.exit(-1);
   } else {
     console.log('inited ',$.env);
+    // require('./test');
   }
-  // require('./test.js')
 })

@@ -21,7 +21,7 @@ module.exports = function (done) {
   app.use(multiparty());
   app.use(session({
     secret: $.config.get('web.session.secret'),
-  }))
+  }));
 
   const router = express.Router();
 

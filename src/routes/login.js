@@ -14,7 +14,6 @@ module.exports = function (done) {
     if (!req.body.password) return next(new Error('missing password'));
 
     const user = await $.method('user.get').call(req.body);
-
     if (!user) {
       return next(new Error('user does not exists'));
     }

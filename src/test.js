@@ -12,11 +12,16 @@
 // },console.log)
 
 async function test() {
-  const user = await $.method('user.get').call({
+  let user = await $.method('user.get').call({
     name: 'hello2'
-  });
-  console.log(user);
+  })
+  // user.then(console.log);
+  console.log(user)
+  // return user;
 }
-
-
-test()
+//
+test();
+// console.log(test())
+// $.method('user.get').call({
+//   name: 'hello2'
+// })

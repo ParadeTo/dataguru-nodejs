@@ -12,22 +12,21 @@ module.exports = function (done) {
     password: {required: true, validate: (v) => validator.isLength(v,{min: 6})}
   });
 
-  $.method('user.add').register(async function (params, callback) {
+  $.method('user.add').register(async function (params) {
     params.name = params.name.toLowerCase();
     // 块级作用域
     {
       const user = await $.method('user.get').call({name: params.name});
-      if (user) return callback(new Error(`user ${params.name} already exists`));
+      if (user) throw new Error(`user ${params.name} already exists`);
     }
     {
       const user = await $.method('user.get').call({email: params.email});
-      if (user) return callback(new Error(`user ${params.email} already exists`));
+      if (user) throw new Error(`user ${params.email} already exists`);
     }
 
     params.password = $.utils.encryptPassword(params.password.toString());
     const user = new $.model.User(params);
-    user.save(callback)
-
+    return user.save(); // async 函数中直接拿到结果
   });
 
   $.method('user.get').check({
@@ -36,7 +35,7 @@ module.exports = function (done) {
     email: {validator: (v) => validator.isEmail(v)},
   });
 
-  $.method('user.get').register(async function (params, callback) {
+  $.method('user.get').register(async function (params) {
     const query = {};
     if (params._id) {
       query._id = params._id
@@ -45,9 +44,9 @@ module.exports = function (done) {
     } else if (params.email) {
       query.email = params.email;
     } else {
-      return callback(new Error('missing parameter _id|name|email'));
+      throw new Error('missing parameter _id|name|email');
     }
-    $.model.User.findOne(query, callback);
+    return $.model.User.findOne(query);
   });
 
   $.method('user.update').check({
@@ -56,10 +55,10 @@ module.exports = function (done) {
     email: {validator: (v) => validator.isEmail(v)},
   });
 
-  $.method('user.update').register(async function (params, callback) {
+  $.method('user.update').register(async function (params) {
     const user = await $.method('user.get').call(params);
     if (!user) {
-      return callback(new Error('user does not exists'));
+      throw new Error('user does not exists');
     }
 
     const update = {};
@@ -79,7 +78,7 @@ module.exports = function (done) {
       update.about = params.about;
     }
 
-    $.model.User.update({_id:user._id}, {$set: update}, callback);
+    return $.model.User.update({_id:user._id}, {$set: update});
   });
 
   done();
