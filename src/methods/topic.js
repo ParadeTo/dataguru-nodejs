@@ -76,5 +76,54 @@ module.exports = function (done) {
     return $.model.Topic.update({_id: params._id}, {$set: update});
   });
 
+  $.method('topic.comment.add').check({
+    _id: {required: true, validate: (v) => validator.isMongoId(v)},
+    authorId: {required: true, validate: (v) => validator.isMongoId(v)},
+    content: {required: true},
+  });
+
+  $.method('topic.comment.add').register(async function (params) {
+    const comment = {
+      cid: $.utils.ObjectId(),
+      authorId: params.authorId,
+      content: params.content,
+      createdAt: new Date(),
+    };
+    return $.model.Topic.update({_id: params._id},{
+      $push: {
+        comments: comment
+      }
+    });
+  });
+
+  $.method('topic.comment.delete').check({
+    _id: {required: true, validate: (v) => validator.isMongoId(v)},
+    cid: {required: true, validate: (v) => validator.isMongoId(v)}
+  });
+
+  $.method('topic.comment.delete').register(async function (params) {
+    return $.model.Topic.update({_id: params._id},{
+      $pull: {
+        comments: {
+          cid: params.cid
+        }
+      }
+    });
+  });
+
+  // $.method('topic.comment.get').check({
+  //   _id: {required: true, validate: (v) => validator.isMongoId(v)},
+  //   cid: {required: true, validate: (v) => validator.isMongoId(v)}
+  // });
+  //
+  // $.method('topic.comment.get').register(async function (params) {
+  //   return $.model.Topic.findOne({
+  //     _id: params._id,
+  //     'comments.cid': params.cid
+  //   }, {
+  //     comments:1
+  //   });
+  // });
+
   done();
 };
