@@ -73,14 +73,23 @@ module.exports = function (done) {
 
   $.router.post('/api/topic/item/:topic_id/comment/delete', $.checkLogin, async function (req, res, next) {
     req.body._id = req.params.topic_id;
-    req.body.authorId = req.session.user._id;
 
-    const comment = await $.method('topic.comment.delete').call({
+    const query = {
       _id: req.params.topic_id,
       cid: req.body.cid
-    });
+    };
 
-    res.apiSuccess({comment});
+    const comment = await $.method('topic.comment.get').call(query);
+
+    // 只有评论的作者才可以删除评论，个人觉得topic的作者应该也可以删
+    if (!(comment && comment.comments && comment.comments[0] &&
+        comment.comments[0].authorId.toString() === req.session.user._id.toString())) {
+      return next(new Error('access denied'));
+    }
+
+    await $.method('topic.comment.delete').call(query);
+
+    res.apiSuccess({comment:comment.comments[0]});
   });
 
   done();

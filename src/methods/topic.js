@@ -8,21 +8,20 @@ import validator from 'validator';
 module.exports = function (done) {
 
   $.method('topic.add').check({
-    authorId: {required: true, validate: (v) => validator.isMongoId(v)},
+    authorId: {required: true, validate: (v) => validator.isMongoId(String(v))},
     title: {required: true},
     content: {required: true},
     tags: {validate: (v) => Array.isArray(v)}
   });
 
   $.method('topic.add').register(async function (params) {
-    console.log(params);
     const topic = new $.model.Topic(params);
     topic.createdAt = new Date();
     return topic.save();
   });
 
   $.method('topic.get').check({
-    _id: {required: true, validate: (v) => validator.isMongoId(v)}
+    _id: {required: true, validate: (v) => validator.isMongoId(String(v))}
   });
 
   $.method('topic.get').register(async function (params) {
@@ -30,7 +29,7 @@ module.exports = function (done) {
   });
 
   $.method('topic.list').check({
-    authorId: {validate: (v) => validator.isMongoId(v)},
+    authorId: {validate: (v) => validator.isMongoId(String(v))},
     tags: {validate: (v) => Array.isArray(v)},
     skip: {validate: (v) => v >= 0},
     limit: {validate: (v) => v > 0}
@@ -57,7 +56,7 @@ module.exports = function (done) {
   });
 
   $.method('topic.delete').check({
-    _id: {required: true, validate: (v) => validator.isMongoId(v)}
+    _id: {required: true, validate: (v) => validator.isMongoId(String(v))}
   });
 
   $.method('topic.delete').register(async function (params) {
@@ -65,7 +64,7 @@ module.exports = function (done) {
   });
 
   $.method('topic.update').check({
-    _id: {required: true, validate: (v) => validator.isMongoId(v)}
+    _id: {required: true, validate: (v) => validator.isMongoId(String(v))}
   });
 
   $.method('topic.update').register(async function (params) {
@@ -77,17 +76,16 @@ module.exports = function (done) {
   });
 
   $.method('topic.comment.add').check({
-    _id: {required: true, validate: (v) => validator.isMongoId(v)},
-    authorId: {required: true, validate: (v) => validator.isMongoId(v)},
+    _id: {required: true, validate: (v) => validator.isMongoId(String(v))},
+    authorId: {required: true, validate: (v) => validator.isMongoId(String(v))},
     content: {required: true},
   });
 
   $.method('topic.comment.add').register(async function (params) {
     const comment = {
-      cid: $.utils.ObjectId(),
       authorId: params.authorId,
       content: params.content,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
     return $.model.Topic.update({_id: params._id},{
       $push: {
@@ -97,33 +95,33 @@ module.exports = function (done) {
   });
 
   $.method('topic.comment.delete').check({
-    _id: {required: true, validate: (v) => validator.isMongoId(v)},
-    cid: {required: true, validate: (v) => validator.isMongoId(v)}
+    _id: {required: true, validate: (v) => validator.isMongoId(String(v))},
+    cid: {required: true, validate: (v) => validator.isMongoId(String(v))}
   });
 
   $.method('topic.comment.delete').register(async function (params) {
     return $.model.Topic.update({_id: params._id},{
       $pull: {
         comments: {
-          cid: params.cid
+          _id: params.cid
         }
       }
     });
   });
 
-  // $.method('topic.comment.get').check({
-  //   _id: {required: true, validate: (v) => validator.isMongoId(v)},
-  //   cid: {required: true, validate: (v) => validator.isMongoId(v)}
-  // });
-  //
-  // $.method('topic.comment.get').register(async function (params) {
-  //   return $.model.Topic.findOne({
-  //     _id: params._id,
-  //     'comments.cid': params.cid
-  //   }, {
-  //     comments:1
-  //   });
-  // });
+  $.method('topic.comment.get').check({
+    _id: {required: true, validate: (v) => validator.isMongoId(String(v))},
+    cid: {required: true, validate: (v) => validator.isMongoId(String(v))}
+  });
+
+  $.method('topic.comment.get').register(async function (params) {
+    return $.model.Topic.findOne({
+      _id: params._id,
+      'comments._id': params.cid
+    }, {
+      "comments.$":1 // 不加这个，会返回所有的comments
+    });
+  });
 
   done();
 };
