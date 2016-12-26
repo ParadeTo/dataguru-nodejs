@@ -4,7 +4,7 @@
   "description": "",
   "main": "app/main.jsx",
   "scripts": {
-    "start": "webpack-dev-server --devtool eval --progress --colors --hot --content-base app --host 192.168.10.169",
+    "start": "webpack-dev-server --devtool eval --progress --colors --hot --content-base app --host 127.0.0.1",
     "deploy": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "deploy-windows": "SET NODE_ENV=production & webpack -p --colors --config webpack.production.config.js"
   },
@@ -12,6 +12,7 @@
     "babel-runtime": "6.x",
     "bootstrap": "^3.3.7",
     "bootstrap-webpack": "0.0.5",
+    "browser-request": "^0.3.3",
     "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "imports-loader": "^0.7.0",

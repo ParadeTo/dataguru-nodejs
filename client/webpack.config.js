@@ -1,7 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var OpenBrowserPlugin = require('open-browser-webpack-plugin');
-var PORT = 8089
+var PORT = 3000
 
 
 module.exports = {
@@ -11,11 +11,14 @@ module.exports = {
     inline: true,
     progress: true,
     contentBase: './app',
-    port: PORT
+    port: PORT,
+    proxy: {
+      '*': 'http://127.0.0.1:3001'
+    }
   },
   entry: [
     'webpack/hot/dev-server',
-    'webpack-dev-server/client?http://192.168.10.169:'+PORT,
+    'webpack-dev-server/client?http://127.0.0.1:'+PORT,
     path.resolve(__dirname, 'app/main.js')
   ],
   output: {
@@ -30,7 +33,8 @@ module.exports = {
       { test: /\.(woff|woff2)$/,  loader: "url-loader?limit=10000&mimetype=application/font-woff" },
       { test: /\.ttf$/, loader: "file-loader" },
       { test: /\.eot$/, loader: "file-loader" },
-      { test: /\.svg$/, loader: "file-loader" }
+      { test: /\.svg$/, loader: "file-loader" },
+      { test: require.resolve('bootstrap'), loader: "imports?jQuery=jquery"}
     ]
   },
   resolve: {
@@ -38,6 +42,6 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new OpenBrowserPlugin({ url: 'http://192.168.10.169:'+PORT })
+    new OpenBrowserPlugin({ url: 'http://127.0.0.1:'+PORT })
   ]
 };

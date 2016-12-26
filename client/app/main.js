@@ -1,3 +1,6 @@
+var jQuery = require('jquery');
+window.jQuery = jQuery;
+require('bootstrap-webpack');
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
