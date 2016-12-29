@@ -44,3 +44,8 @@ export function getTopicDetail(id) {
   return request('get', `topic/item/${id}`)
     .then(ret => ret.topic);
 };
+
+export function addTopic(topic) {
+  return request('post','topic/add', topic)
+    .then(ret => ret.topic);
+}
