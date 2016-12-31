@@ -5,6 +5,7 @@
  */
 
 module.exports = function (done) {
+  // 增加帖子
   $.router.post('/api/topic/add', $.checkLogin, async function (req, res, next) {
     req.body.authorId = req.session.user._id;
 
@@ -17,6 +18,7 @@ module.exports = function (done) {
     res.apiSuccess({topic});
   });
 
+  // 帖子列表
   $.router.get('/api/topic/list', async function (req, res, next) {
     if ('tags' in req.query) {
       req.query.tags = req.query.tags.split(',').map(v => v.trim()).filter(v => v);
@@ -26,12 +28,14 @@ module.exports = function (done) {
     res.apiSuccess({list});
   });
 
+  // 帖子详情
   $.router.get('/api/topic/item/:topic_id', async function (req, res, next) {
     const topic = await $.method('topic.get').call({_id: req.params.topic_id});
     if (!topic) return next(new Error(`topic ${req.params.topic_id} does not exists`));
     res.apiSuccess({topic});
   });
 
+  // 更新帖子
   $.router.post('/api/topic/item/:topic_id', $.checkLogin, $.checkTopicAuthor, async function (req, res, next) {
     if ('tags' in req.body) {
       req.body.tags = req.body.tags.split(',').map(v => v.trim()).filter(v => v);
@@ -43,27 +47,13 @@ module.exports = function (done) {
     res.apiSuccess({topic});
   });
 
+  // 删除帖子
   $.router.delete('/api/topic/item/:topic_id', $.checkLogin, $.checkTopicAuthor, async function (req, res, next) {
     const topic = await $.method('topic.delete').call({_id: req.params.topic_id});
     res.apiSuccess({topic});
   });
 
-  $.router.post('/api/topic/comment/add', $.checkLogin, $.checkTopicAuthor, async function (req, res, next) {
-    if ('tags' in req.body) {
-      req.body.tags = req.body.tags.split(',').map(v => v.trim()).filter(v => v);
-    }
-
-    req.body._id = req.params.topic_id;
-    await $.method('topic.update').call(req.body);
-    const topic = await $.method('topic.get').call({_id: req.params.topic_id});
-    res.apiSuccess({topic});
-  });
-
-  $.router.delete('/api/topic/item/:topic_id', $.checkLogin, $.checkTopicAuthor, async function (req, res, next) {
-    const topic = await $.method('topic.delete').call({_id: req.params.topic_id});
-    res.apiSuccess({topic});
-  });
-
+  // 给帖子增加评论
   $.router.post('/api/topic/item/:topic_id/comment/add', $.checkLogin, async function (req, res, next) {
     req.body._id = req.params.topic_id;
     req.body.authorId = req.session.user._id;
@@ -71,6 +61,7 @@ module.exports = function (done) {
     res.apiSuccess({comment});
   });
 
+  // 删除评论
   $.router.post('/api/topic/item/:topic_id/comment/delete', $.checkLogin, async function (req, res, next) {
     req.body._id = req.params.topic_id;
 
