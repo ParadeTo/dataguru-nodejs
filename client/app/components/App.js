@@ -10,6 +10,7 @@ import Footer from './Footer';
 import TopicList from './TopicList';
 import TopicDetail from './TopicDetail';
 import Login from './Login';
+import NewTopic from './NewTopic';
 
 class Index extends React.Component {
   render() {
@@ -38,6 +39,7 @@ export default class App extends React.Component {
               <Route path="/" component={Index}>
                 <Route path="/topic/:id" component={TopicDetail} />
                 <Route path="/login" component={Login} />
+                <Route path="/new" component={NewTopic} />
               </Route>
             </Router>
         );

@@ -1,6 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
 import {login} from '../lib/client';
+import {redirectURL} from  '../lib/utils';
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -20,7 +21,7 @@ export default class Login extends React.Component {
     login({name: this.state.name, password: this.state.password})
       .then(ret => {
         $btn.button('reset');
-        window.location.href = '/';
+        redirectURL('/');
       })
       .catch(err => {
         $btn.button('reset');

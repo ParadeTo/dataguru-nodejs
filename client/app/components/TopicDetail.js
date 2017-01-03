@@ -1,5 +1,9 @@
 import React from 'react';
-import {getTopicDetail} from '../lib/client'
+import Highlight from 'react-highlight';
+import 'highlight.js/styles/monokai-sublime.css';
+import {getTopicDetail} from '../lib/client';
+import {renderMarkdown} from '../lib/utils';
+
 
 export default class TopicDetail extends React.Component {
   constructor(props) {
@@ -11,7 +15,10 @@ export default class TopicDetail extends React.Component {
 
   componentDidMount() {
     getTopicDetail(this.props.params.id)
-      .then(ret => {console.log(ret);this.setState({topic:ret})})
+      .then(topic => {
+        topic.html = renderMarkdown(topic.content);
+        this.setState({topic: topic})
+      })
       .catch(err => console.error(err));
   }
 
@@ -23,7 +30,10 @@ export default class TopicDetail extends React.Component {
     return (
       <div>
         <h2>{topic.title}</h2>
-        <section>{topic.content}</section>
+        <Highlight className="language-javascript">
+          {"if(1+1 === 2) {var a = 1;}"}
+        </Highlight>
+        <section dangerouslySetInnerHTML={{__html:topic.html}} />
         <ul className="list-group">
           {
             topic.comments.map((item, i) => {
