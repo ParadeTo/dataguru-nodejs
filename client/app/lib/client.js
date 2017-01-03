@@ -45,13 +45,19 @@ export function signup(user) {
 // 登录
 export function login(user) {
   return request('post', 'login', user)
-    .then( ret => ret.token );
+    .then(ret => ret.token);
 };
 
 // 登出
 export function logout(logout_token) {
   return request('post', `logout?token=${logout_token}`);
 };
+
+// 检查登录状态
+export function loginUser() {
+  return request('post', 'login_user')
+    .then(ret => ret.user);
+}
 
 // 帖子列表
 export function getTopicList() {

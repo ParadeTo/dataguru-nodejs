@@ -9,13 +9,14 @@ import Header from './Header';
 import Footer from './Footer';
 import TopicList from './TopicList';
 import TopicDetail from './TopicDetail';
+import Login from './Login';
 
 class Index extends React.Component {
   render() {
     return (
       <div className="container">
         <Header />
-        {this.props.children ? this.props.children : <TopicList/>}
+          {this.props.children ? this.props.children : <TopicList/>}
         <Footer />
       </div>
     )
@@ -36,6 +37,7 @@ export default class App extends React.Component {
             <Router history={browserHistory}>
               <Route path="/" component={Index}>
                 <Route path="/topic/:id" component={TopicDetail} />
+                <Route path="/login" component={Login} />
               </Route>
             </Router>
         );

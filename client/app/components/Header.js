@@ -1,8 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router';
+import {loginUser, logout} from '../lib/client';
+
 export default class Header extends React.Component {
   constructor(props) {
-      super(props);
+    super(props);
+    this.state = {};
+  }
+
+  componentWillMount() {
+    loginUser()
+      .then(user => {
+        this.setState({user});
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  handleLogout() {
+    logout()
+      .then(user => {
+        location.reload();
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -20,7 +43,6 @@ export default class Header extends React.Component {
               <Link className="navbar-brand" to="/">简单论坛系统</Link>
             </div>
 
-
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav">
                 <li className="active"><Link to="/">首页</Link></li>
@@ -28,17 +50,12 @@ export default class Header extends React.Component {
               </ul>
 
               <ul className="nav navbar-nav navbar-right">
-                <li><a href="#">Link</a></li>
-                <li className="dropdown">
-                  <a href="#" className="dropdown-toggle" data-toggle="dropdown">Dropdown <span className="caret"></span></a>
-                  <ul className="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li className="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                  </ul>
-                </li>
+                {
+                  this.state.user ?
+                  <li><a onClick={this.handleLogout.bind(this)}>注销[{this.state.user.nickname}]</a></li>
+                  :
+                  <li><a href="/login">登录</a></li>
+                }
               </ul>
             </div>
           </div>

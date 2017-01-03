@@ -13,7 +13,7 @@ module.exports = function (done) {
     name: {type: String, unique: true},
     email: {type: String, unique: true},
     password: {type: String},
-    nickname: {type: String},
+    nickname: {type: String, default : '匿名用户'},
     about: {type: String}
   });
 
