@@ -1,9 +1,7 @@
 import React from 'react';
-import Highlight from 'react-highlight';
-import 'highlight.js/styles/monokai-sublime.css';
+import 'highlight.js/styles/github-gist.css';
 import {getTopicDetail} from '../lib/client';
 import {renderMarkdown} from '../lib/utils';
-
 
 export default class TopicDetail extends React.Component {
   constructor(props) {
@@ -30,9 +28,6 @@ export default class TopicDetail extends React.Component {
     return (
       <div>
         <h2>{topic.title}</h2>
-        <Highlight className="language-javascript">
-          {"if(1+1 === 2) {var a = 1;}"}
-        </Highlight>
         <section dangerouslySetInnerHTML={{__html:topic.html}} />
         <ul className="list-group">
           {
