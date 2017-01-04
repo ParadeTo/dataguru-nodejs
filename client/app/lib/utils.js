@@ -1,9 +1,11 @@
 import marked from 'marked';
 import Highlight from 'highlight.js';
 import xss from 'xss';
+import {browserHistory} from 'react-router';
 
 export function redirectURL(url) {
-  location = url;
+  browserHistory.push(url);
+  // location = url;
 }
 
 marked.setOptions({

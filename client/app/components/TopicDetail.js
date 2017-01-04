@@ -1,7 +1,7 @@
 import React from 'react';
 import 'highlight.js/styles/github-gist.css';
 import {getTopicDetail} from '../lib/client';
-import {renderMarkdown} from '../lib/utils';
+import {renderMarkdown,redirectURL} from '../lib/utils';
 
 export default class TopicDetail extends React.Component {
   constructor(props) {
@@ -20,6 +20,10 @@ export default class TopicDetail extends React.Component {
       .catch(err => console.error(err));
   }
 
+  toEdit() {
+    redirectURL(`/edit/${this.props.params.id}`);
+  }
+
   render() {
     const topic = this.state.topic;
     if (!topic) {
@@ -27,6 +31,7 @@ export default class TopicDetail extends React.Component {
     }
     return (
       <div>
+        <button type="button" className="btn btn-primary" onClick={this.toEdit.bind(this)}>编辑</button>
         <h2>{topic.title}</h2>
         <section dangerouslySetInnerHTML={{__html:topic.html}} />
         <ul className="list-group">
