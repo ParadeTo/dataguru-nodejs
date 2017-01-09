@@ -13,6 +13,7 @@
     "bootstrap": "^3.3.7",
     "bootstrap-webpack": "0.0.5",
     "browser-request": "^0.3.3",
+    "codemirror": "^5.22.0",
     "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "highlight.js": "^9.9.0",
@@ -21,6 +22,7 @@
     "jquery": "^3.1.1",
     "marked": "^0.3.6",
     "react": "15.x",
+    "react-codemirror": "^0.3.0",
     "react-dom": "15.x",
     "react-router": "^3.0.0",
     "xss": "^0.3.3"

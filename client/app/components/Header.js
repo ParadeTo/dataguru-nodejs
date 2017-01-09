@@ -29,37 +29,43 @@ export default class Header extends React.Component {
   }
 
   render() {
-      return (
-        <nav className="navbar navbar-default" role="navigation">
-          <div className="container-fluid">
+    let rightNavs = null;
+    if (this.state.user) {
 
-            <div className="navbar-header">
-              <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span className="sr-only">Toggle navigation</span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
-                <span className="icon-bar"></span>
-              </button>
-              <Link className="navbar-brand" to="/">简单论坛系统</Link>
-            </div>
+    }
+    return (
+      <nav className="navbar navbar-default" role="navigation">
+        <div className="container-fluid">
 
-            <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul className="nav navbar-nav">
-                <li className="active"><Link to="/">首页</Link></li>
-                <li><Link to="/new"><i className="glyphicon glyphicon-plus"></i>发帖</Link></li>
-              </ul>
-
-              <ul className="nav navbar-nav navbar-right">
-                {
-                  this.state.user ?
-                  <li><a onClick={this.handleLogout.bind(this)}>注销[{this.state.user.nickname}]</a></li>
-                  :
-                  <li><a href="/login">登录</a></li>
-                }
-              </ul>
-            </div>
+          <div className="navbar-header">
+            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+            </button>
+            <Link className="navbar-brand" to="/">简单论坛系统</Link>
           </div>
-        </nav>
-      );
+
+          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul className="nav navbar-nav">
+              <li className="active"><Link to="/">首页</Link></li>
+              <li><Link to="/new"><i className="glyphicon glyphicon-plus"></i>发帖</Link></li>
+            </ul>
+              {
+                this.state.user ?
+                <ul className="nav navbar-nav navbar-right">
+                  <li><a onClick={this.handleLogout.bind(this)}>注销[{this.state.user.nickname}]</a></li>
+                </ul>
+                :
+                <ul className="nav navbar-nav navbar-right">
+                  <li><Link to="/login">登录</Link></li>
+                  <li><Link to="/signup">注册</Link></li>
+                </ul>
+              }
+          </div>
+        </div>
+      </nav>
+    );
   }
 }

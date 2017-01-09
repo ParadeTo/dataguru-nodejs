@@ -1,9 +1,9 @@
 import React from 'react';
 import $ from 'jquery';
-import {login} from '../lib/client';
+import {signup} from '../lib/client';
 import {redirectURL} from  '../lib/utils';
 
-export default class Login extends React.Component {
+export default class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -18,10 +18,11 @@ export default class Login extends React.Component {
   handleLogin(e) {
     const $btn = $(e.target);
     $btn.button('loading');
-    login({name: this.state.name, password: this.state.password})
+    signup({name:this.state.name, nickname: this.state.nickname, email:this.state.email, password:this.state.password})
       .then(ret => {
         $btn.button('reset');
-        location.href = '/';
+        alert('注册成功')
+        redirectURL('/login');
       })
       .catch(err => {
         $btn.button('reset');
@@ -35,13 +36,21 @@ export default class Login extends React.Component {
       <div style={{width: 400, margin: 'auto'}}>
         <div className="panel panel-primary">
           <div className="panel-heading">
-            登录
+            注册
           </div>
           <div className="panel-body">
             <form role="form">
               <div className="form-group">
                 <label htmlFor="ipt-name">用户名</label>
-                <input onChange={this.handleChange.bind(this,'name')} type="text" className="form-control" id="ipt-name" placeholder="Enter email"/>
+                <input onChange={this.handleChange.bind(this,'name')} type="text" className="form-control" id="ipt-name" placeholder="Enter name"/>
+              </div>
+              <div className="form-group">
+                <label htmlFor="ipt-email">邮箱</label>
+                <input onChange={this.handleChange.bind(this,'email')} type="email" className="form-control" id="ipt-email" placeholder="Enter email"/>
+              </div>
+              <div className="form-group">
+                <label htmlFor="ipt-nickname">昵称</label>
+                <input onChange={this.handleChange.bind(this,'nickname')} type="email" className="form-control" id="ipt-nickname" placeholder="Enter nicknamel"/>
               </div>
               <div className="form-group">
                 <label htmlFor="password">密码</label>

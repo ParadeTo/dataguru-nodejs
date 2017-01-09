@@ -2,6 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 import {addTopic} from '../lib/client';
 import {redirectURL} from  '../lib/utils';
+import TopicEditor from  './TopicEditor.js';
 
 export default class NewTopic extends React.Component {
   constructor(props) {
@@ -9,51 +10,21 @@ export default class NewTopic extends React.Component {
     this.state = {};
   }
 
-  handleChange(name, e) {
-    let newState = {};
-    newState[name] = e.target.value;
-    this.setState(newState);
-  }
-
-  handleSubmit(e) {
-    const $btn = $(e.target);
-    $btn.button('loading');
-    addTopic({title: this.state.title, tags: this.state.tags, content: this.state.content})
-      .then(ret => {
-        $btn.button('reset');
-        console.log('成功');
-        redirectURL(`/topic/${ret._id}`);
-      })
-      .catch(err => {
-        $btn.button('reset');
-      });
-  }
-
   render() {
     return (
-      <div className="panel panel-primary">
-        <div className="panel-heading">
-          发帖
-        </div>
-        <div className="panel-body">
-          <form role="form">
-            <div className="form-group">
-              <label htmlFor="ipt-title">标题</label>
-              <input onChange={this.handleChange.bind(this,'title')} type="text" className="form-control" id="ipt-title" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="ipt-tags">标签</label>
-              <input onChange={this.handleChange.bind(this,'tags')} type="text" className="form-control" id="ipt-tags" />
-              <p className="help-block">多个标签用逗号分隔</p>
-            </div>
-            <div className="form-group">
-              <label htmlFor="ipt-content">内容</label>
-              <textarea rows={10} onChange={this.handleChange.bind(this,'content')} className="form-control" id="ipt-content" ></textarea>
-            </div>
-            <button type="button" className="btn btn-primary" onClick={this.handleSubmit.bind(this)}>保存</button>
-          </form>
-        </div>
-      </div>
+      <TopicEditor
+        title={'发表新主题'}
+        topic={null}
+        onSave={(topic, done) => {
+          addTopic({title: topic.title, tags: topic.tags, content: topic.content})
+            .then(ret => {
+              done();
+              redirectURL(`/topic/${ret._id}`);
+            })
+            .catch(err => {
+              done();
+            });
+        }}/>
     );
   }
 }

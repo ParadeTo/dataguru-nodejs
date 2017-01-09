@@ -95,7 +95,7 @@ export function addComment(topicId, comment) {
 };
 
 // 删除评论
-export function delComment(topicId,cid) {
-  return request('post', `topic/item/${topicId}/comment/delete`, cid)
-    .then(ret => ret.comment);
+export function delComment(topicId, cid) {
+  return request('post', `topic/item/${topicId}/comment/delete`, {cid: cid})
+    .then(ret => ret);
 };
