@@ -83,7 +83,7 @@ export default class TopicDetail extends React.Component {
                       <i className="glyphicon glyphicon-trash"></i>
                     </button>
                   </span>
-                  {item.authorId}于{item.createAt}说：<br/>
+                  {item.authorNickname}于{item.createAt}说：<br/>
                 <p dangerouslySetInnerHTML={{__html: item.html}} ></p>
                 </li>
               )

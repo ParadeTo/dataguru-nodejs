@@ -19,6 +19,7 @@ module.exports = function (done) {
     lastCommentedAt: {type: Date, index: true},
     comments: [{ // 子文档会自动加上_id属性
       authorId: ObjectId,
+      authorNickname: String,
       content: String,
       createdAt: Date
     }]

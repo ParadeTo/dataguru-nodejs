@@ -30,17 +30,13 @@ module.exports = function (done) {
 
   // 帖子详情
   $.router.get('/api/topic/item/:topic_id', async function (req, res, next) {
-    const topic = await $.method('topic.get').call({_id: req.params.topic_id});
+    let topic = await $.method('topic.get').call({_id: req.params.topic_id});
     // 循环给comments中的作者增加名字
     for (let comment of topic.comments) {
-      let author = await $.method('user.get').call({_id: comment.authorId});
-      console.log(author);
-      comment.author = author;
+      let author = await $.method('user.get').call({_id: comment.authorId.toString()});
+      comment.authorNickname = author.nickname;
     }
-    // topic.comments.forEach((comment) => {
-    //
-    // });
-    // console.log(topic);
+
     if (!topic) return next(new Error(`topic ${req.params.topic_id} does not exists`));
     res.apiSuccess({topic});
   });
