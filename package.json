@@ -8,7 +8,8 @@
     "watch": "npm run clean & babel src -d target --watch",
     "compile": "npm run clean & babel src -d target",
     "clean": "rm -rf target",
-    "dev-windows": "set NODE_ENV=dev& set DEBUG=my:*& cd target& nodemon server.js"
+    "dev-windows": "set NODE_ENV=dev& set DEBUG=my:*& cd target& nodemon server.js",
+    "dev": "set DEBUG=my:* && cd target && NODE_ENV=dev nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "babel-preset-stage-0": "^6.16.0"
   },
   "dependencies": {
+    "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
     "connect-multiparty": "^2.0.0",
     "connect-redis": "^3.1.0",
