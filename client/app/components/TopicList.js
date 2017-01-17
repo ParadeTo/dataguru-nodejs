@@ -22,58 +22,58 @@ export default class TopicList extends React.Component {
   }
 
   componentWillMount() {
-    // console.log('测试注册');
-    // signup({name:'youxingzhi',email:'youxingzhi@qq.com',password:'123456'})
-    //   .then(console.log)
-    //   .catch(err => console.log(err));
-    //
-    // login({name:'youxingzhi',password:'123456'})
-    //   .then(ret => {console.log('测试登录'); console.log(ret);})
-    //   .catch(err => console.log(err));
-    //
-    // addTopic({title:'今天是2016最后一天',content:'我TM还在加班！',tags:'吐槽,无聊'})
-    //   .then(ret => {console.log('增加帖子'); console.log(ret);})
-    //   .catch(err => console.log(err));
-    //
-    // updateTopic("5867198b4b4539316070c1d5",{title:'今天是2016最后一天呀呀呀',content:'我TM还在加班呀呀呀！',tags:'吐槽,无聊'})
-    //   .then(ret => {console.log('更新帖子'); console.log(ret);})
-    //   .catch(err => console.log(err));
-    //
-    getTopicList()
-      .then(ret => {this.setState({list: ret.list})})
+    this.updateList({
+      page: this.props.location.query.page,
+      tags: this.props.location.query.tags
+    })
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.updateList({
+      tags: newProps.location.query.tags,
+      page: newProps.location.query.page,
+    });
+  }
+
+  updateList(query) {
+    getTopicList(query)
+      .then(ret => {this.setState(ret)})
       .catch(err => console.log(err));
-    //
-    // getTopicDetail("5867198b4b4539316070c1d5")
-    //   .then(ret => {console.log('帖子详情');console.log(ret);})
-    //   .catch(err => console.log(err));
-    //
-    // // delTopic('586718ce4b4539316070c1d0')
-    // //   .then(ret => {console.log('删除帖子'); console.log(ret);})
-    // //   .catch(err => console.log(err));
-    //
-    // addComment("5867198b4b4539316070c1d5",{content:'好可怜！！！'})
-    //   .then(ret => {console.log('增加评论'); console.log(ret);})
-    //   .catch(err => console.log(err));
-    //
-    // delComment("5867198b4b4539316070c1d5",{cid:"58671b6f4b4539316070c1e0"})
-    //   .then(ret => {console.log('删除评论'); console.log(ret);})
-    //   .catch(err => console.log(err));
   }
 
   render() {
     const list = Array.isArray(this.state.list) ? this.state.list : [];
+    let page = this.state.page;
+    if (!(page > 1)) page = 1;
+
+    let prevPage = page - 1;
+    if (prevPage < 1) prevPage = 1;
+
+    let nextPage = page + 1;
+
     return (
-      <ul className="list-group">
-        {
-          list.map((item, i) => {
-            return (
-              <Link to={`/topic/${item._id}`} className="list-group-item" key={i}>
-                {item.title}
-              </Link>
-            )
-          })
-        }
-      </ul>
+      <div>
+        <ul className="list-group">
+          {
+            list.map((item, i) => {
+              return (
+                <Link to={`/topic/${item._id}`} className="list-group-item" key={i}>
+                  {item.title}
+                  <span className="pull-right">
+                    {item.author.nickname} 发表于 {item.createdAt}
+                  </span>
+                </Link>
+              )
+            })
+          }
+        </ul>
+        <nav>
+          <ul className="pagination">
+            <li><Link to={`/?page=${prevPage}`}>&laquo;</Link></li>
+            <li><Link to={`/?page=${nextPage}`}>&raquo;</Link></li>
+          </ul>
+        </nav>
+      </div>
     );
   }
 }

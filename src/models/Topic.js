@@ -10,7 +10,7 @@ module.exports = function (done) {
   const ObjectId = Schema.ObjectId;
 
   var Topic = new Schema({
-    authorId: {type: ObjectId, index: true},
+    author: {type: ObjectId, index: true, ref: 'User'},
     title: {type: String, trim: true},
     content: {type: String},
     tags: [{type: String, index: true}],
@@ -18,7 +18,7 @@ module.exports = function (done) {
     updatedAt: {type: Date, index: true},
     lastCommentedAt: {type: Date, index: true},
     comments: [{ // 子文档会自动加上_id属性
-      authorId: ObjectId,
+      author: {type: ObjectId, ref: 'User'},
       authorNickname: String,
       content: String,
       createdAt: Date

@@ -56,8 +56,9 @@ export default class TopicDetail extends React.Component {
           <i className="glyphicon glyphicon-edit"></i>编辑
         </button>
         <h2>{topic.title}</h2>
-        <hr />
+        <p style={{color:'gray'}}>{topic.author.nickname} 发表于 {topic.createdAt}</p>
         <p style={{color:'gray'}}>{"标签：" + topic.tags}</p>
+        <hr />
         <section dangerouslySetInnerHTML={{__html:topic.html}} />
         <CommentEditor
           title="发表评论"
@@ -83,7 +84,7 @@ export default class TopicDetail extends React.Component {
                       <i className="glyphicon glyphicon-trash"></i>
                     </button>
                   </span>
-                  {item.authorNickname}于{item.createdAt}说：<br/>
+                  {item.author.nickname}于{item.createdAt}说：<br/>
                 <p dangerouslySetInnerHTML={{__html: item.html}} ></p>
                 </li>
               )

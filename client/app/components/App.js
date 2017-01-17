@@ -19,7 +19,7 @@ class Index extends React.Component {
     return (
       <div className="container">
         <Header />
-          {this.props.children ? this.props.children : <TopicList/>}
+          {this.props.children ? this.props.children : <TopicList {...this.props}/>}
         <Footer />
       </div>
     )

@@ -1,6 +1,6 @@
 import browserRequest from 'browser-request';
 
-const urlBase = '/api/';
+const urlBase = '/api';
 
 export function request(method, path, data = {}) {
   return new Promise((resolve, reject) => {
@@ -60,8 +60,8 @@ export function loginUser() {
 }
 
 // 帖子列表
-export function getTopicList() {
-  return request('get', 'topic/list');
+export function getTopicList(options) {
+  return request('get', 'topic/list', options);
 };
 
 // 帖子详情
