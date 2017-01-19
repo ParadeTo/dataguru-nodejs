@@ -1,6 +1,6 @@
 import React from 'react';
 import 'highlight.js/styles/github-gist.css';
-import {getTopicDetail, addComment, delComment} from '../lib/client';
+import {getTopicDetail, addComment, delComment, delTopic} from '../lib/client';
 import {renderMarkdown,redirectURL} from '../lib/utils';
 import CommentEditor from './CommentEditor';
 
@@ -34,6 +34,17 @@ export default class TopicDetail extends React.Component {
     redirectURL(`/edit/${this.props.params.id}`);
   }
 
+  del() {
+    if(!confirm('是否删除文章')) return;
+    delTopic(this.state.topic._id)
+      .then(() => {
+        redirectURL('/');
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
   handleDelComment(cid) {
     if(!confirm('是否删除评论')) return;
     delComment(this.state.topic._id, cid)
@@ -52,9 +63,19 @@ export default class TopicDetail extends React.Component {
     }
     return (
       <div>
-        <button type="button" className="btn btn-primary" onClick={this.toEdit.bind(this)}>
-          <i className="glyphicon glyphicon-edit"></i>编辑
-        </button>
+        {
+          topic.permission.edit ?
+          <button type="button" className="btn btn-primary" onClick={this.toEdit.bind(this)}>
+            <i className="glyphicon glyphicon-edit"></i>编辑
+          </button>:null
+        }
+        &nbsp;
+        {
+          topic.permission.delete ?
+          <button type="button" className="btn btn-danger" onClick={this.del.bind(this)}>
+            <i className="glyphicon glyphicon-trash"></i>删除
+          </button> : null
+        }
         <h2>{topic.title}</h2>
         <p style={{color:'gray'}}>{topic.author.nickname} 发表于 {topic.createdAt}</p>
         <p style={{color:'gray'}}>{"标签：" + topic.tags}</p>
@@ -80,9 +101,12 @@ export default class TopicDetail extends React.Component {
               return (
                 <li className="list-group-item" key={i}>
                   <span className="pull-right">
-                    <button className="btn btn-xs btn-danger" onClick={this.handleDelComment.bind(this, item._id)}>
-                      <i className="glyphicon glyphicon-trash"></i>
-                    </button>
+                    {
+                      item.permission.delete ?
+                      <button className="btn btn-xs btn-danger" onClick={this.handleDelComment.bind(this, item._id)}>
+                        <i className="glyphicon glyphicon-trash"></i>
+                      </button>:null
+                    }
                   </span>
                   {item.author.nickname}于{item.createdAt}说：<br/>
                 <p dangerouslySetInnerHTML={{__html: item.html}} ></p>

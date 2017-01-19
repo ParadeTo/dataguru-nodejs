@@ -59,6 +59,11 @@ export function loginUser() {
     .then(ret => ret.user);
 }
 
+// 更新用户信息
+export function updateProfile(data) {
+  return request('post', 'user/profile', data);
+}
+
 // 帖子列表
 export function getTopicList(options) {
   return request('get', 'topic/list', options);

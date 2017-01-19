@@ -12,7 +12,9 @@ module.exports = function (done) {
     if ('tags' in req.body) {
       req.body.tags = req.body.tags.split(',').map(v => v.trim()).filter(v => v);
     }
-
+    // 得到倒数第二篇帖子
+    const nextToLast = await $.method('topic.nextToLast').call({userId:req.session.user._id.toString()});
+    if (nextToLast && (new Date - lastOne.createdAt) < 1 * 3600 * 1000) return next(new Error('operation is too frequent'));
     const topic = await $.method('topic.add').call(req.body);
 
     res.apiSuccess({topic});
@@ -40,15 +42,26 @@ module.exports = function (done) {
 
   // 帖子详情
   $.router.get('/api/topic/item/:topic_id', async function (req, res, next) {
-    let topic = await $.method('topic.get').call({_id: req.params.topic_id});
-    // 循环给comments中的作者增加名字
-    // for (let comment of topic.comments) {
-    //   let author = await $.method('user.get').call({_id: comment.author.toString()});
-    //   comment.authorNickname = author.nickname;
-    // }
-
+    const topic = await $.method('topic.get').call({_id: req.params.topic_id});
     if (!topic) return next(new Error(`topic ${req.params.topic_id} does not exists`));
-    res.apiSuccess({topic});
+    const userId = req.session.user && req.session.user._id && req.session.user._id.toString();
+    const isAdmin = req.session.user && req.session.user.isAdmin;
+
+    const result = {};
+    // mongodb返回的数据是不能修改的
+    result.topic = $.utils.cloneObject(topic);
+    result.topic.permission = {
+      edit: isAdmin || userId === result.topic.author._id,
+      delete: isAdmin || userId === result.topic.author._id,
+    };
+    result.topic.comments.forEach(item => {
+      item.permission = {
+        edit: isAdmin || userId === item.author._id,
+        delete: isAdmin || userId === item.author._id,
+      }
+    });
+
+    res.apiSuccess(result);
   });
 
   // 更新帖子
@@ -89,12 +102,16 @@ module.exports = function (done) {
     const comment = await $.method('topic.comment.get').call(query);
 
     // 只有评论的作者才可以删除评论，个人觉得topic的作者应该也可以删
-    if (!(comment && comment.comments && comment.comments[0] &&
-        comment.comments[0].author.toString() === req.session.user._id.toString())) {
-      return next(new Error('access denied'));
+    if (comment && comment.comments && comment.comments[0]) {
+      const item = comment.comments[0];
+      if (req.session.user.isAdmin || item.author._id.toString() === req.session.user._id.toString()) {
+        await $.method('topic.comment.delete').call(query);
+      } else {
+        return next(new Error('access denied'));
+      }
+    } else {
+      return next(new Error('topic not exists'));
     }
-
-    await $.method('topic.comment.delete').call(query);
 
     res.apiSuccess({comment:comment.comments[0]});
   });

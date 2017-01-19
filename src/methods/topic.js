@@ -30,6 +30,16 @@ module.exports = function (done) {
       .populate('comments.author', 'name nickname');
   });
 
+  // 得到用户倒数第二次发的帖子
+  $.method('topic.nextToLast').check({
+    userId: {required: true, validate: (v) => validator.isMongoId(String(v))}
+  })
+
+  $.method('topic.nextToLast').register(async function (params) {
+    return $.model.Topic.findOne({author: params.userId})
+      .sort({createdAt: -1}).skip(1).limit(1);
+  });
+
   $.method('topic.list').check({
     author: {validate: (v) => validator.isMongoId(String(v))},
     tags: {validate: (v) => Array.isArray(v)},
