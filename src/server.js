@@ -49,6 +49,9 @@ $.init.add((done) => {
 // 初始化mongodb
 $.init.load(path.resolve(__dirname, 'init', 'mongodb.js'));
 
+// 初始化redis
+$.init.load(path.resolve(__dirname, 'init', 'limiter.js'));
+
 // 加载models
 $.init.load(path.resolve(__dirname, 'models'));
 
