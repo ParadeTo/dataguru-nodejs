@@ -14,7 +14,7 @@ module.exports = function (done) {
     }
     // 得到倒数第二篇帖子
     const nextToLast = await $.method('topic.nextToLast').call({userId:req.session.user._id.toString()});
-    if (nextToLast && (new Date - lastOne.createdAt) < 1 * 3600 * 1000) return next(new Error('operation is too frequent'));
+    if (nextToLast && (new Date() - nextToLast.createdAt) < 1 * 3600 * 1000) return next(new Error('operation is too frequent'));
     const topic = await $.method('topic.add').call(req.body);
 
     res.apiSuccess({topic});

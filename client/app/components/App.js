@@ -14,6 +14,7 @@ import Signup from './Signup';
 import NewTopic from './NewTopic';
 import EditTopic from './EditTopic';
 import Profile from './Profile';
+import Notification from './Notification';
 
 class Index extends React.Component {
   render() {
@@ -42,6 +43,7 @@ export default class App extends React.Component {
                 <Route path="/new" component={NewTopic} />
                 <Route path="/edit/:id" component={EditTopic} />
                 <Route path="/profile" component={Profile} />
+                <Route path="/notification" component={Notification} />
               </Route>
             </Router>
         );

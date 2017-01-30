@@ -104,3 +104,19 @@ export function delComment(topicId, cid) {
   return request('post', `topic/item/${topicId}/comment/delete`, {cid: cid})
     .then(ret => ret);
 };
+
+// 得到消息的个数
+export function notificationCount(isRead) {
+  return request('get', 'notification/count', {isRead})
+    .then(ret => ret.count);
+};
+
+// 得到消息列表
+export function notificationList() {
+  return request('get', 'notification/list');
+}
+
+// 消息设为已读
+export function notificationSetRead(id) {
+  return request('post', `notification/${id}/read`);
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-import {loginUser, logout} from '../lib/client';
+import {loginUser, logout, notificationCount} from '../lib/client';
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -16,6 +16,11 @@ export default class Header extends React.Component {
       .catch(err => {
         console.log(err);
       });
+    notificationCount(false)
+      .then(notificationCount => {
+        this.setState({notificationCount});
+      })
+      .catch(err => console.error(err));
   }
 
   handleLogout() {
@@ -56,6 +61,18 @@ export default class Header extends React.Component {
                 this.state.user ?
                 <ul className="nav navbar-nav navbar-right">
                   <li><Link to="/profile">设置</Link></li>
+                  <li>
+                    <Link to="/notification">消息
+                      {
+                        this.state.notificationCount > 0 ?
+                        <span className='text-danger'>
+                          {`(${this.state.notificationCount})未读`}
+                        </span>
+                        :
+                        null
+                      }
+                    </Link>
+                  </li>
                   <li><a onClick={this.handleLogout.bind(this)}>注销[{this.state.user.nickname}]</a></li>
                 </ul>
                 :
