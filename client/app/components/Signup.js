@@ -56,7 +56,7 @@ export default class Signup extends React.Component {
                 <label htmlFor="password">密码</label>
                 <input onChange={this.handleChange.bind(this,'password')} type="password" className="form-control" id="password" placeholder="Password"/>
               </div>
-              <button type="button" className="btn btn-default" onClick={this.handleLogin.bind(this)}>登录</button>
+              <button type="button" className="btn btn-default" onClick={this.handleLogin.bind(this)}>注册</button>
             </form>
           </div>
         </div>

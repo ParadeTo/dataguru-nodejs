@@ -8,4 +8,10 @@ module.exports = function (set, get, has) {
   set('web.port', 3001);
   set('db.mongodb','mongodb://127.0.0.1/dataguru-nodejs');
 
-}
+  set('smtp.host', 'smtp.qq.com');
+  set('smtp.secureConnection', true);
+  set('smtp.port', 465);
+  set('smtp.auth.user', 'youxingzhi@qq.com');
+  set('smtp.auth.pass', 'Woshiyxz12');
+  set('smtp.debug', true);
+};

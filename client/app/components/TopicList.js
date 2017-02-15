@@ -61,6 +61,7 @@ export default class TopicList extends React.Component {
                   {item.title}
                   <span className="pull-right">
                     {item.author.nickname} 发表于 {item.createdAt}
+                    ，阅读量：{item.pageView || 0}
                   </span>
                 </Link>
               )

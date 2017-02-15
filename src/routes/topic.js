@@ -20,11 +20,13 @@ module.exports = function (done) {
     if ('tags' in req.body) {
       req.body.tags = req.body.tags.split(',').map(v => v.trim()).filter(v => v);
     }
+    // 发布频率限制-我写的
     // 得到倒数第二篇帖子
     //const nextToLast = await $.method('topic.nextToLast').call({userId:req.session.user._id.toString()});
     //if (nextToLast && (new Date() - nextToLast.createdAt) < 1 * 3600 * 1000) return next(new Error('operation is too frequent'));
     const topic = await $.method('topic.add').call(req.body);
 
+    await $.method('user.incrScore').call({_id: req.body.author, score: 5});
     res.apiSuccess({topic});
   });
 
@@ -69,6 +71,7 @@ module.exports = function (done) {
       }
     });
 
+    await $.method('topic.incrPageView').call({_id: req.params.topic_id});
     res.apiSuccess(result);
   });
 
@@ -104,6 +107,9 @@ module.exports = function (done) {
     }
 
     const comment = await $.method('topic.comment.add').call(req.body);
+
+    await $.method('user.incrScore').call({_id: req.body.author, score: 1});
+
     res.apiSuccess({comment});
   });
 

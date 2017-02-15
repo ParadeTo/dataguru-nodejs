@@ -4,6 +4,7 @@
  * @author ayou <youxingzhi@qq.com>
  */
 import validator from 'validator';
+import nodemailer from 'nodemailer';
 
 module.exports = function (done) {
   $.method('user.add').check({
@@ -36,7 +37,7 @@ module.exports = function (done) {
   });
 
   $.method('user.get').check({
-    _id: {validate: (v) => validator.isMongoId(v)},
+    _id: {validate: (v) => validator.isMongoId(String(v))},
     name: {validate: (v) => validator.isLength(v, {min: 4, max: 20}) && /^[a-zA-Z]/.test(v)},
     email: {validator: (v) => validator.isEmail(v)},
   });
@@ -86,6 +87,51 @@ module.exports = function (done) {
 
     return $.model.User.update({_id:user._id}, {$set: update});
   });
+
+  $.method('user.incrScore').check({
+    _id: {validate: (v) => validator.isMongoId(v), required: true},
+    score: {validate: (v) => !isNaN(v), required: true}
+  });
+
+  $.method('user.incrScore').register(async function (params) {
+
+    return $.model.User.update({_id: params._id}, {$inc: {score: params.score}});
+  });
+
+  $.method('user.sendEmail').check({
+    email: {required: true, validator: (v) => validator.isEmail(v)}
+  });
+
+  $.method('user.sendEmail').register(async function (params) {
+    // 开启一个 SMTP 连接池
+    var smtpTransport = nodemailer.createTransport("SMTP",{
+      host: "smtp.qq.com", // 主机
+      secureConnection: true, // 使用 SSL
+      port: 465, // SMTP 端口
+      auth: {
+        user: "youxingzhi@qq.com", // 账号
+        pass: "Woshiyxz12" // 密码
+      }
+    });
+    // 设置邮件内容
+    var mailOptions = {
+      from: "ayou <youxingzhi@qq.com>", // 发件地址
+      to: params.email, // 收件列表
+      subject: "注册成功", // 标题
+      html: "您已注册成功，<a href='http://localhost:3000'>点击登录</a>" // html 内容
+    }
+    // 发送邮件
+    smtpTransport.sendMail(mailOptions, function(error, response){
+      if(error){
+        console.log(error);
+      }else{
+        console.log("Message sent: " + response.message);
+      }
+      smtpTransport.close(); // 如果没用，关闭连接池
+    });
+
+  });
+
 
   done();
 }

@@ -48,16 +48,24 @@ module.exports = function (done) {
   });
 
   $.router.post('/api/signup', async function (req, res, next) {
-    // 发布频率限制
-    {
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      const key = `addtopic:${ip}:${$.utils.date('Ymd')}`;
-      const limit = 2;
-      const ok = await $.limiter.incr(key, limit);
-      if (!ok) throw new Error('signup is too frequent');
-    }
+    // 注册频率限制
+    // {
+    //   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    //   const key = `addtopic:${ip}:${$.utils.date('Ymd')}`;
+    //   const limit = 2;
+    //   const ok = await $.limiter.incr(key, limit);
+    //   if (!ok) throw new Error('signup is too frequent');
+    // }
     const user = await $.method('user.add').call(req.body);
 
+    $.method('mail.sendTemplate').call({
+      to: user.email,
+      subject: '欢迎',
+      template: 'welcome',
+      data: user
+    }, err => {
+      if (err) console.error(err);
+    });
     res.apiSuccess({user: user});
   });
 

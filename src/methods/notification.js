@@ -12,7 +12,7 @@ module.exports = function (done) {
     type: {validate: (v) => typeof v === 'string' && v, required: true}
   });
   $.method('notification.add').register(async function (params) {
-
+    
     const item = new $.model.Notification(params);
     item.createdAt = new Date();
     item.isRead = false;

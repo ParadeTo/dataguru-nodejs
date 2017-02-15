@@ -58,7 +58,8 @@ module.exports = function (done) {
       tags: 1,
       createdAt: 1,
       updatedAt: 1,
-      lastCommentedAt: 1
+      lastCommentedAt: 1,
+      pageView: 1
     }).populate('author', 'name nickname');
 
     if (params.skip) ret.skip(Number(params.skip));
@@ -100,6 +101,14 @@ module.exports = function (done) {
     return $.model.Topic.update({_id: params._id}, {$set: update});
   });
 
+  $.method('topic.incrPageView').check({
+    _id: {required: true, validate: (v) => validator.isMongoId(String(v))}
+  });
+
+  $.method('topic.incrPageView').register(async function (params) {
+    return $.model.Topic.update({_id: params._id}, {$inc: {pageView: 1}});
+  });
+
   $.method('topic.comment.add').check({
     _id: {required: true, validate: (v) => validator.isMongoId(String(v))},
     author: {required: true, validate: (v) => validator.isMongoId(String(v))},
@@ -124,6 +133,22 @@ module.exports = function (done) {
         _id: params._id,
         title: topic.title
       }
+    });
+
+    // 发送邮件
+    const fromUser = await $.method('user.get').call({_id: params.author});
+    const toUser = await $.method('user.get').call({_id: topic.author._id});
+    $.method('mail.sendTemplate').call({
+      to: toUser.email,
+      subject: `有人回复了你的主题《${topic.title}》`,
+      template: 'reply',
+      data: {
+        topic: topic,
+        content: params.content,
+        user: fromUser
+      }
+    }, err => {
+      if (err) console.error(err);
     });
 
     return $.model.Topic.update({_id: params._id},{
