@@ -49,8 +49,11 @@ $.init.add((done) => {
 // 初始化mongodb
 $.init.load(path.resolve(__dirname, 'init', 'mongodb.js'));
 
-// 初始化redis
+// 初始化limiter
 $.init.load(path.resolve(__dirname, 'init', 'limiter.js'));
+
+// 初始化captcha
+$.init.load(path.resolve(__dirname, 'init', 'captcha.js'));
 
 // 加载models
 $.init.load(path.resolve(__dirname, 'models'));

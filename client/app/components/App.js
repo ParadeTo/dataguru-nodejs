@@ -11,6 +11,7 @@ import TopicList from './TopicList';
 import TopicDetail from './TopicDetail';
 import Login from './Login';
 import Signup from './Signup';
+import ResetPassword from './ResetPassword';
 import NewTopic from './NewTopic';
 import EditTopic from './EditTopic';
 import Profile from './Profile';
@@ -40,6 +41,7 @@ export default class App extends React.Component {
                 <Route path="/topic/:id" component={TopicDetail} />
                 <Route path="/login" component={Login} />
                 <Route path="/signup" component={Signup} />
+                <Route path="/reset_password" component={ResetPassword} />
                 <Route path="/new" component={NewTopic} />
                 <Route path="/edit/:id" component={EditTopic} />
                 <Route path="/profile" component={Profile} />

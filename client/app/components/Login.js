@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import $ from 'jquery';
 import {login} from '../lib/client';
 import {redirectURL} from  '../lib/utils';
@@ -31,6 +32,7 @@ export default class Login extends React.Component {
   }
 
   render() {
+    const isBind = (this.props.location.query.bind === '1');
     return (
       <div style={{width: 400, margin: 'auto'}}>
         <div className="panel panel-primary">
@@ -47,7 +49,14 @@ export default class Login extends React.Component {
                 <label htmlFor="password">密码</label>
                 <input onChange={this.handleChange.bind(this,'password')} type="password" className="form-control" id="password" placeholder="Password"/>
               </div>
-              <button type="button" className="btn btn-default" onClick={this.handleLogin.bind(this)}>登录</button>
+              <button type="button" className="btn btn-default" onClick={this.handleLogin.bind(this)}>{isBind ? '绑定' : '登录'}</button>
+              {
+                isBind ? null :
+                <a href="/auth/github" className="btn btn-info">使用github账号登录</a>
+              }
+              <span className='pull-right'>
+                <Link to="/reset_password">忘记密码</Link>
+              </span>
             </form>
           </div>
         </div>

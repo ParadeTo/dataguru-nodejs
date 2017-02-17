@@ -11,7 +11,32 @@ import nodemailer from 'nodemailer';
 
 module.exports = function (done) {
   // 开启一个 SMTP 连接池
-  $.smtp = nodemailer.createTransport('SMTP', $.config.get('smtp'));
+  // var smtpTransport = nodemailer.createTransport("SMTP",{
+  //   host: "smtp.qq.com", // 主机
+  //   secureConnection: true, // 使用 SSL
+  //   port: 465, // SMTP 端口
+  //   auth: {
+  //     user: "youxingzhi@qq.com", // 账号
+  //     pass: "Woshiyxz12" // 密码
+  //   }
+  // });
+  // // 设置邮件内容
+  // var mailOptions = {
+  //   from: "ayou <youxingzhi@qq.com>", // 发件地址
+  //   to: params.email, // 收件列表
+  //   subject: "注册成功", // 标题
+  //   html: "您已注册成功，<a href='http://localhost:3000'>点击登录</a>" // html 内容
+  // }
+  // 开启一个 SMTP 连接池
+  $.smtp = nodemailer.createTransport('SMTP', {
+    host: "smtp.qq.com", // 主机
+    secureConnection: true, // 使用 SSL
+    port: 465, // SMTP 端口
+    auth: {
+      user: "youxingzhi@qq.com", // 账号
+      pass: "Woshiyxz12" // 密码
+    }
+  });
 
   const templates = {};
   rd.eachFileFilterSync(path.resolve(__dirname, '../../email_templates'), /\.html$/, (f, s) => {

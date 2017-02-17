@@ -16,7 +16,8 @@ module.exports = function (done) {
     nickname: {type: String, default : '匿名用户'},
     about: {type: String},
     isAdmin: {type: Boolean},
-    score: {type: Number}
+    score: {type: Number},
+    githubUsername: {type: String, index: true}
   });
 
   $.mongodb.model('User', User);

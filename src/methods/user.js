@@ -50,6 +50,8 @@ module.exports = function (done) {
       query.name = params.name;
     } else if (params.email) {
       query.email = params.email;
+    } else if (params.githubUsername) {
+      query.githubUsername = params.githubUsername;
     } else {
       throw new Error('missing parameter _id|name|email');
     }
@@ -57,7 +59,7 @@ module.exports = function (done) {
   });
 
   $.method('user.update').check({
-    _id: {validate: (v) => validator.isMongoId(v)},
+    _id: {validate: (v) => validator.isMongoId(String(v))},
     name: {validate: (v) => validator.isLength(v, {min: 4, max: 20}) && /^[a-zA-Z]/.test(v)},
     email: {validator: (v) => validator.isEmail(v)},
   });
@@ -75,8 +77,11 @@ module.exports = function (done) {
     if (params.email && user.email !== params.email) {
       update.email = params.email;
     }
+    if (params.githubUsername) {
+      update.githubUsername = params.githubUsername;
+    }
     if (params.password) {
-      update.password = params.password;
+      update.password = $.utils.encryptPassword(params.password.toString());
     }
     if (params.nickname) {
       update.nickname = params.nickname;
