@@ -79,5 +79,17 @@ module.exports = function (done) {
     res.apiSuccess({email: req.body.email});
   });
 
+  $.router.post('/api/user/unbind', $.checkLogin, async function (req, res, next) {
+
+    delete req.session.user.githubUsername;
+
+    const ret = await $.method('user.del').call({
+      _id: req.session.user._id,
+      githubUsername: 1
+    });
+
+    res.apiSuccess({});
+  });
+
   done();
 };

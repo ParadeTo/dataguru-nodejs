@@ -59,6 +59,11 @@ export function loginUser() {
     .then(ret => ret.user);
 }
 
+// 解绑github账号
+export function unBind() {
+  return request('post', 'user/unbind');
+}
+
 // 更新用户信息
 export function updateProfile(data) {
   return request('post', 'user/profile', data);

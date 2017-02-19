@@ -58,6 +58,42 @@ module.exports = function (done) {
     return $.model.User.findOne(query);
   });
 
+  $.method('user.del').check({
+    _id: {validate: (v) => validator.isMongoId(String(v))},
+    name: {validate: (v) => validator.isLength(v, {min: 4, max: 20}) && /^[a-zA-Z]/.test(v)},
+    email: {validator: (v) => validator.isEmail(v)},
+  });
+
+  $.method('user.del').register(async function (params) {
+    const user = await $.method('user.get').call(params);
+
+    if (!user) {
+      throw new Error('user does not exists');
+    }
+
+    const del = {};
+    if (params.name && user.name !== params.name) {
+      del.name = params.name;
+    }
+    if (params.email && user.email !== params.email) {
+      del.email = params.email;
+    }
+    if (params.githubUsername) {
+      del.githubUsername = params.githubUsername;
+    }
+    if (params.password) {
+      del.password = $.utils.encryptPassword(params.password.toString());
+    }
+    if (params.nickname) {
+      del.nickname = params.nickname;
+    }
+    if (params.about) {
+      del.about = params.about;
+    }
+
+    return $.model.User.update({_id:user._id}, {$unset: del});
+  });
+
   $.method('user.update').check({
     _id: {validate: (v) => validator.isMongoId(String(v))},
     name: {validate: (v) => validator.isLength(v, {min: 4, max: 20}) && /^[a-zA-Z]/.test(v)},
@@ -66,6 +102,7 @@ module.exports = function (done) {
 
   $.method('user.update').register(async function (params) {
     const user = await $.method('user.get').call(params);
+
     if (!user) {
       throw new Error('user does not exists');
     }
